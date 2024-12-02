@@ -14,7 +14,7 @@ def preprocess(query):
     return tokenizer(query)
 
 def get_output(query):
-    inputs = query
+    inputs = tokenizer(query,return_tensors="pt")
     with torch.no_grad():
         outputs = model(**inputs)
     prediction = outputs.logits.argmax(dim=-1)
@@ -26,8 +26,9 @@ def ping():
     return {"message":"Hello world!"}
 
 
-@app.get("/sentence")
+@app.get("/sentence/{query}")
 def get_emotion(query:str):
-    pass
-    prediction = get_output(query)
+    print(query)
+    prediction = get_output(query).tolist()
+    print(prediction)
     return prediction 
